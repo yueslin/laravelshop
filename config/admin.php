@@ -22,7 +22,7 @@ return [
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo' => '<b>Laravel</b> shop',
+    'logo' => '<b>Laravel</b> Shop',
 
     /*
     |--------------------------------------------------------------------------
@@ -231,7 +231,7 @@ return [
     | This value is used to set the background image of login page.
     |
     */
-    'login_background_image' => '',
+    'login_background_image' => env('APP_URL').'/upload/images/20181203.jpg',
 
     /*
     |--------------------------------------------------------------------------
