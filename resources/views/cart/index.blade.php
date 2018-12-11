@@ -156,8 +156,9 @@
                   .then(function (response) {
                       swal('订单提交成功', '', 'success')
                           .then(function () {
-                              location.reload();
+                              location.href = '/orders/' + response.data.id;
                           });
+
                   }, function (error) {
                       if (error.response.status === 422) {
                           // http 状态码为 422 代表用户输入校验失败
