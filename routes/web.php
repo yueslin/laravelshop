@@ -11,6 +11,15 @@
 |
 */
 
+Route::get('test',function (){
+    phpinfo();
+//    return app('wechat_pay')->scan([
+//        'out_trade_no' => '505050',  // 商户订单流水号，与支付宝 out_trade_no 一样
+//        'total_fee' => 1, // 与支付宝不同，微信支付的金额单位是分。
+//        'body'      => '支付 Laravel Shop 的订单：505050', // 订单描述
+//    ]);
+});
+
 Route::redirect('/', '/products')->name('root');
 Route::get('products', 'ProductsController@index')->name('products.index');
 Route::get('products', 'ProductsController@index')->name('products.index');
@@ -44,6 +53,7 @@ Route::group(['middleware' => 'auth'], function() {
 
         Route::get('payment/{order}/alipay', 'PaymentController@payByAlipay')->name('payment.alipay');
         Route::get('payment/alipay/return', 'PaymentController@alipayReturn')->name('payment.alipay.return');
+        Route::get('payment/{order}/wechat', 'PaymentController@payByWechat')->name('payment.wechat');
 
     });
     // end
@@ -52,5 +62,5 @@ Route::group(['middleware' => 'auth'], function() {
 
 
 Route::get('products/{product}', 'ProductsController@show')->name('products.show');
-
 Route::post('payment/alipay/notify', 'PaymentController@alipayNotify')->name('payment.alipay.notify');
+Route::post('payment/wechat/notify', 'PaymentController@wechatNotify')->name('payment.wechat.notify');
