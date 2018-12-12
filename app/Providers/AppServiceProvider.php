@@ -50,4 +50,5 @@ class AppServiceProvider extends ServiceProvider
             return Pay::wechat($config);
         });
     }
+
 }
