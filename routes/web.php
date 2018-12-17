@@ -12,12 +12,8 @@
 */
 
 Route::get('test',function (){
-    phpinfo();
-//    return app('wechat_pay')->scan([
-//        'out_trade_no' => '505050',  // 商户订单流水号，与支付宝 out_trade_no 一样
-//        'total_fee' => 1, // 与支付宝不同，微信支付的金额单位是分。
-//        'body'      => '支付 Laravel Shop 的订单：505050', // 订单描述
-//    ]);
+    $date = '2018-08-08';
+    echo date('Y-m-t',strtotime($date));
 });
 
 Route::redirect('/', '/products')->name('root');
