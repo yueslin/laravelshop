@@ -6,9 +6,15 @@ use App\Exceptions\InvalidRequestException;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Events\OrderPaid;
 
 class PaymentController extends Controller
 {
+    protected function afterPaid(Order $order)
+    {
+        event(new OrderPaid($order));
+    }
+
     public function payByAlipay(Order $order,Request $request)
     {
         $this->authorize('own',$order);
@@ -60,6 +66,8 @@ class PaymentController extends Controller
             'payment_no'     => $data->trade_no, // 支付宝订单号
         ]);
 
+        $this->afterPaid($order);
+
         return app('alipay')->success();
 
     }
@@ -108,6 +116,7 @@ class PaymentController extends Controller
             'payment_method' => 'wechat',
             'payment_no'     => $data->transaction_id,
         ]);
+        $this->afterPaid($order);
 
         return app('wechat_pay')->success();
     }
