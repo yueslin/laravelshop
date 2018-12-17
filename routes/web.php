@@ -12,8 +12,17 @@
 */
 
 Route::get('test',function (){
-    $date = '2018-08-08';
-    echo date('Y-m-t',strtotime($date));
+
+    $result = \App\Models\OrderItem::query()
+        ->where('product_id',5)
+        ->whereHas('order', function ($query) {
+            $query->whereNotNull('paid_at');
+        })
+        ->first([
+            DB::raw('count(*) as review_count'),
+            DB::raw('avg(rating) as rating')
+        ]);
+    dd($result);
 });
 
 Route::redirect('/', '/products')->name('root');
@@ -47,6 +56,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('orders', 'OrdersController@index')->name('orders.index');
         Route::get('orders/{order}', 'OrdersController@show')->name('orders.show');
         Route::post('orders/{order}/received', 'OrdersController@received')->name('orders.received');
+        Route::get('orders/{order}/review', 'OrdersController@review')->name('orders.review.show');
+        Route::post('orders/{order}/review', 'OrdersController@sendReview')->name('orders.review.store');
 
         Route::get('payment/{order}/alipay', 'PaymentController@payByAlipay')->name('payment.alipay');
         Route::get('payment/alipay/return', 'PaymentController@alipayReturn')->name('payment.alipay.return');
