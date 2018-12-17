@@ -24,6 +24,7 @@ class OrdersController extends Controller
     {
         return $content
             ->header('订单列表')
+            ->description('description')
             ->body($this->grid());
     }
 
@@ -34,12 +35,13 @@ class OrdersController extends Controller
      * @param Content $content
      * @return Content
      */
-    public function show($id, Content $content)
+    public function show(Order $order, Content $content)
     {
         return $content
-            ->header('Detail')
+            ->header('查看订单')
             ->description('description')
-            ->body($this->detail($id));
+            ->body(view('admin.orders.show', ['order' => $order]));
+
     }
 
     /**
@@ -118,37 +120,25 @@ class OrdersController extends Controller
      */
     protected function detail($id)
     {
-        $grid = new Show(Order::findOrFail($id));
+        $show = new Show(Order::findOrFail($id));
 
-        // 只展示已支付的订单，并且默认按支付时间倒序排序
-        $grid->model()->whereNotNull('paid_at')->orderBy('paid_at', 'desc');
+        $show->text('no', 'No');
+        $show->number('user_id', 'User id');
+        $show->textarea('address', 'Address');
+        $show->decimal('total_amount', 'Total amount');
+        $show->textarea('remark', 'Remark');
+        $show->datetime('paid_at', 'Paid at')->default(date('Y-m-d H:i:s'));
+        $show->text('payment_method', 'Payment method');
+        $show->text('payment_no', 'Payment no');
+        $show->text('refund_status', 'Refund status')->default('pending');
+        $show->text('refund_no', 'Refund no');
+        $show->switch('closed', 'Closed');
+        $show->switch('reviewed', 'Reviewed');
+        $show->text('ship_status', 'Ship status')->default('pending');
+        $show->textarea('ship_data', 'Ship data');
+        $show->textarea('extra', 'Extra');
 
-        $grid->no('订单流水号');
-        // 展示关联关系的字段时，使用 column 方法
-        $grid->column('user.name', '买家');
-        $grid->total_amount('总金额')->sortable();
-        $grid->paid_at('支付时间')->sortable();
-        $grid->ship_status('物流')->display(function($value) {
-            return Order::$shipStatusMap[$value];
-        });
-        $grid->refund_status('退款状态')->display(function($value) {
-            return Order::$refundStatusMap[$value];
-        });
-        // 禁用创建按钮，后台不需要创建订单
-        $grid->disableCreateButton();
-        $grid->actions(function ($actions) {
-            // 禁用删除和编辑按钮
-            $actions->disableDelete();
-            $actions->disableEdit();
-        });
-        $grid->tools(function ($tools) {
-            // 禁用批量删除按钮
-            $tools->batch(function ($batch) {
-                $batch->disableDelete();
-            });
-        });
-
-        return $grid;
+        return $show;
     }
 
     /**
