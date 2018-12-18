@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Http\Requests\Admin\HandleRefundRequest;
 use App\Models\Order;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
@@ -18,6 +19,7 @@ class OrdersController extends Controller
     use HasResourceActions;
 
 
+    //发货
     public function ship(Order $order, Request $request)
     {
         // 判断当前订单是否已支付
@@ -48,6 +50,30 @@ class OrdersController extends Controller
         return redirect()->back();
     }
 
+    //退款操作
+    public function handleRefund(Order $order,HandleRefundRequest $request)
+    {
+        //判断订单状态是否正确
+        if ($order->refund_status !== Order::REFUND_STATUS_APPLIED) {
+            throw new InvalidRequestException('订单状态不正确');
+        }
+        //是否同意退款
+        if ($request->input('agree')){
+            // 同意退款的逻辑这里先留空
+        }else{
+            // 将拒绝退款理由放到订单的 extra 字段中
+            $extra = $order->extra ?: [];
+            $extra['refund_disagree_reason'] = $request->input('reason');
+            // 将订单的退款状态改为未退款
+            $order->update([
+                'refund_status' => Order::REFUND_STATUS_PENDING,
+                'extra'         => $extra,
+            ]);
+        }
+
+        return $order;
+
+    }
 
 
     /**
