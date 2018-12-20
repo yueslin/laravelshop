@@ -169,7 +169,9 @@ class CouponCodesController extends Controller
         $form->datetime('not_after', '结束时间');
         $form->radio('enabled', '启用')->options(['1' => '是', '0' => '否']);
 
+        //注册一个事件处理器，在数据保存前会被触发
         $form->saving(function (Form $form) {
+            //如果用户没有填写优惠码，程序自动生成一个
             if (!$form->code) {
                 $form->code = CouponCode::findAvailableCode();
             }
