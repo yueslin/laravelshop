@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 use App\Exceptions\InvalidRequestException;
 use App\Services\CartService;
 use App\Services\OrderService;
+use App\Exceptions\CouponCodeUnavailableException;
+use App\Models\CouponCode;
 
 class OrdersController extends Controller
 {
@@ -22,8 +24,16 @@ class OrdersController extends Controller
     {
         $user    = $request->user();
         $address = UserAddress::find($request->input('address_id'));
-
-        return $orderService->store($user, $address, $request->input('remark'), $request->input('items'));
+        $coupon = null;
+        
+        if ($code = $request->input('coupon_code')){
+            $coupon = CouponCode::where('code', $code)->first();
+            if (!$coupon) {
+                throw new CouponCodeUnavailableException('优惠券不存在');
+            }
+        }
+        
+        return $orderService->store($user, $address, $request->input('remark'), $request->input('items'),$coupon);
     }
     public function index(Request $request)
     {
@@ -31,10 +41,10 @@ class OrdersController extends Controller
             // 使用 with 方法预加载，避免N + 1问题
             ->with(['items.product', 'items.productSku'])
             ->where('user_id', $request->user()->id)
+            ->where('closed', false)
             ->orderBy('created_at', 'desc')
             ->paginate();
         return view('orders.index', ['orders' => $orders]);
-
     }
 
     public function show(Order $order,Request $request)

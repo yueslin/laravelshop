@@ -126,6 +126,7 @@
 @section('scriptsAfterJs')
   <script>
       $(document).ready(function() {
+
           // 微信支付按钮事件
           $('#btn-wechat').click(function() {
               swal({

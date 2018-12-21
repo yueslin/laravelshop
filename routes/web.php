@@ -10,21 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('test',function (){
-
-    $result = \App\Models\OrderItem::query()
-        ->where('product_id',5)
-        ->whereHas('order', function ($query) {
-            $query->whereNotNull('paid_at');
-        })
-        ->first([
-            DB::raw('count(*) as review_count'),
-            DB::raw('avg(rating) as rating')
-        ]);
-    dd($result);
-});
-
+    
+    
 Route::redirect('/', '/products')->name('root');
 Route::get('products', 'ProductsController@index')->name('products.index');
 Route::get('products', 'ProductsController@index')->name('products.index');
