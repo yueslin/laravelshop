@@ -67,7 +67,7 @@ return [
             'driver'     => 'local',
             'root'       => public_path('upload'),
             'visibility' => 'public',
-            'url' => env('APP_URL').'/upload/',
+            'url' => config('custom.updateFile'),
         ],
 
     ],

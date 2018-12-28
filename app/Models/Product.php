@@ -22,13 +22,22 @@ class Product extends Model
         return $this->hasMany(ProductSku::class);
     }
 
+    
+    // 查询分类
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    
+    
 
+    //拼接图片路径
     public function getImageUrlAttribute()
     {
         // 如果 image 字段本身就已经是完整的 url 就直接返回
         if (Str::startsWith($this->attributes['image'], ['http://', 'https://'])) {
             return $this->attributes['image'];
         }
-        return config('filesystems.disks.admin')['url'].$this->attributes['image'];
+        return config('custom.updateFile').$this->attributes['image'];
     }
 }
