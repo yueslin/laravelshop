@@ -10,6 +10,7 @@ use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 //use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Controllers\ModelForm; // <= 教程要求的 trait
+use App\Models\Category;
 
 class ProductsController extends Controller
 {
@@ -83,8 +84,9 @@ class ProductsController extends Controller
     protected function grid()
     {
         return Admin::grid(Product::class, function (Grid $grid) {
-            $grid->id('ID')->sortable();
+            $grid->model()->with(['category']);
             $grid->title('商品名称');
+            $grid->column('category.name', '类目');
             $grid->on_sale('已上架')->display(function ($value) {
                 return $value ? '是' : '否';
             });
@@ -142,6 +144,13 @@ class ProductsController extends Controller
 
             // 创建一个输入框，第一个参数 title 是模型的字段名，第二个参数是该字段描述
             $form->text('title', '商品名称')->rules('required');
+    
+            $form->select('category_id', '类目')->options(function ($id) {
+                $category = Category::find($id);
+                if ($category) {
+                    return [$category->id => $category->full_name];
+                }
+            })->ajax('/admin/api/categories?is_directory=0');
 
             // 创建一个选择图片的框
             $form->image('image', '封面图片')->rules('required|image');
