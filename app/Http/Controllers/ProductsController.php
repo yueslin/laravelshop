@@ -7,10 +7,11 @@ use App\Models\Category;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Services\CategoryService;
 
 class ProductsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, CategoryService $categoryService)
     {
         // 创建一个查询构造器
         $builder = Product::query()->where('on_sale', true);
@@ -43,7 +44,6 @@ class ProductsController extends Controller
                 $builder->where('category_id', $category->id);
             }
         }
-        
 
         // 是否有提交 order 参数，如果有就赋值给 $order 变量
         // order 参数用来控制商品的排序规则
@@ -68,6 +68,7 @@ class ProductsController extends Controller
             ],
             // 等价于 isset($category) ? $category : null
             'category' => $category ?? null,
+
         ]);
 
     }
@@ -77,7 +78,6 @@ class ProductsController extends Controller
         //判断商品是否已经上架，如果没有上架则抛出异常
         if (!$product->on_sale) {
             throw new InvalidRequestException('商品未上架');
-
         }
 
         $favored = false;
