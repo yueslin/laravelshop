@@ -5,19 +5,16 @@ namespace App\Admin\Controllers;
 use App\Models\Product;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
-use Encore\Admin\Facades\Admin;
-use Encore\Admin\Layout\Content;
-use App\Models\Category;
+
 
 class ProductsController extends CommonProductsController
 {
-    
     // 移除 ModelForm
     public function getProductType()
     {
         return Product::TYPE_NORMAL;
     }
-
+    
     protected function customGrid(Grid $grid)
     {
         $grid->model()->with(['category']);
@@ -33,11 +30,9 @@ class ProductsController extends CommonProductsController
         $grid->review_count('评论数');
     }
     
-    
     protected function customForm(Form $form)
     {
         // 普通商品没有额外的字段，因此这里不需要写任何代码
     }
-
 
 }

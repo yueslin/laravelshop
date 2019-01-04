@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\OrderReviewed;
 use App\Http\Requests\ApplyRefundRequest;
+use App\Http\Requests\CrowdFundingOrderRequest;
 use App\Http\Requests\OrderRequest;
 use App\Http\Requests\SendReviewRequest;
 use App\Jobs\CloseOrder;
@@ -35,6 +36,7 @@ class OrdersController extends Controller
         
         return $orderService->store($user, $address, $request->input('remark'), $request->input('items'),$coupon);
     }
+    
     public function index(Request $request)
     {
         $orders = Order::query()
@@ -55,6 +57,7 @@ class OrdersController extends Controller
         return view('orders.show',['order' => $order->load(['items.productSku','items.product'])]);
     }
 
+    //确认收货
     public function received(Order $order,Request $request)
     {
         // 校验权限
@@ -72,6 +75,7 @@ class OrdersController extends Controller
         return $order;
     }
 
+    //评论页面
     public function review(Order $order)
     {
         // 校验权限
@@ -84,6 +88,7 @@ class OrdersController extends Controller
         return view('orders.review', ['order' => $order->load(['items.productSku', 'items.product'])]);
     }
 
+    //保存评论
     public function sendReview(Order $order, SendReviewRequest $request)
     {
         // 校验权限
@@ -116,6 +121,7 @@ class OrdersController extends Controller
         return redirect()->back();
     }
 
+    //申请退款
     public function applyRefund(Order $order,ApplyRefundRequest $request)
     {
         //校检订单是否属于当前用户
@@ -138,6 +144,17 @@ class OrdersController extends Controller
         ]);
 
         return $order;
+    }
+    
+    //众筹商品生成订单
+    public function crowdfunding(CrowdFundingOrderRequest $request,OrderService $orderService)
+    {
+        $user = $request->user();
+        $sku  = ProductSku::find($request->input('sku_id'));
+        $address = UserAddress::find($request->input('address_id'));
+        $amount = $request->input('amount');
+        
+        return $orderService->crowdfunding($user,$address,$sku,$amount);
     }
 
 }

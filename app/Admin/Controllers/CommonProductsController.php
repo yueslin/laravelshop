@@ -4,15 +4,16 @@ namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Layout\Content;
 use App\Models\Category;
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
-
+use Encore\Admin\Controllers\HasResourceActions;
 
 abstract class CommonProductsController extends Controller
 {
+    use HasResourceActions;
+    
     // 定义一个抽象方法，返回当前管理的商品类型
     abstract public function getProductType();
     
@@ -36,7 +37,6 @@ abstract class CommonProductsController extends Controller
             ->header('创建'.Product::$typeMap[$this->getProductType()])
             ->body($this->form());
     }
-    
     
     
     protected function grid()

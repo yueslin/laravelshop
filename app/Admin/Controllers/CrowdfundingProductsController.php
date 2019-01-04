@@ -2,15 +2,10 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Category;
-use App\Models\CrowdfundingProduct;
 use App\Models\Product;
-use App\Http\Controllers\Controller;
-use Encore\Admin\Controllers\HasResourceActions;
+use App\Models\CrowdfundingProduct;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
-use Encore\Admin\Layout\Content;
-use Encore\Admin\Show;
 
 class CrowdfundingProductsController extends CommonProductsController
 {
@@ -19,7 +14,6 @@ class CrowdfundingProductsController extends CommonProductsController
     {
         return Product::TYPE_CROWDFUNDING;
     }
-    
     
     protected function customGrid(Grid $grid)
     {
@@ -37,7 +31,6 @@ class CrowdfundingProductsController extends CommonProductsController
         });
     }
     
-   
     protected function customForm(Form $form)
     {
         // 众筹相关字段
