@@ -33,7 +33,7 @@ class UpdateCrowdfundingProductProgress implements ShouldQueue
         if ($order->type !== Order::TYPE_CROWDFUNDING) {
             return;
         }
-        //查找出众筹商品
+        //查找出众筹商品信息
         $crowdfunding = $order->items[0]->product->crowdfunding;
         
         $data = Order::query()
