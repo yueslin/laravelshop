@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Installment;
+use App\Models\InstallmentItem;
 use App\Models\UserAddress;
+use App\Policies\InstallmentPolicy;
 use App\Policies\UserAddressPolicy;use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Models\Order;
@@ -20,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Model' => 'App\Policies\ModelPolicy',
         UserAddress::class => UserAddressPolicy::class,
         Order::class       => OrderPolicy::class,
+        Installment::class => InstallmentPolicy::class,
 
     ];
 
