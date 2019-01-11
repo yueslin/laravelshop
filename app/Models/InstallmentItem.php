@@ -45,7 +45,7 @@ class InstallmentItem extends Model
 //        $total = bcadd($this->base, $this->fee, 2);
         $total = big_number($this->base,2)->add($this->fee);
         if (!is_null($this->fine)) {
-            $total = add($this->fine);
+            $total->add($this->fine);
         }
         
         return $total->getValue();

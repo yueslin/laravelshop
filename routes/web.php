@@ -10,7 +10,23 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-    
+
+Route::get('test',function (){
+    $res = \App\Models\InstallmentItem::query()
+        //预加载分期付款数据
+        ->with(['installment'])
+        ->whereHas('installment',function ($query){
+            //对应的分期状态为还款中
+            $query->where('status',\App\Models\Installment::STATUS_REPAYING);
+        })
+        //还款截止日期在当前时间之前
+        ->where('due_date','<=',\Carbon\Carbon::now())
+        //尚未还款
+        ->whereNull('paid_at')
+        ->get();
+    dd($res);
+});
+
     
 Route::redirect('/', '/products')->name('root');
 Route::get('products', 'ProductsController@index')->name('products.index');

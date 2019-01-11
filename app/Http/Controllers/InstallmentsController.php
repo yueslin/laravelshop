@@ -50,6 +50,12 @@ class InstallmentsController extends Controller
             throw new InvalidRequestException('该分期订单已结清');
         }
     
+        //本地支付简化流程
+        $out_trade_no = $installment->no.'_'.$nextItem->sequence;
+        $this->paid($out_trade_no,'alipay','alipay:'.time());
+        return view('pages.success', ['msg' => '付款成功']);
+    
+    
         // 调用支付宝的网页支付
         return app('alipay')->web([
             // 支付订单号使用分期流水号+还款计划编号
@@ -71,6 +77,7 @@ class InstallmentsController extends Controller
         }catch (\Exception $e){
             return view('pages.error',['msg' => '数据不正确']);
         }
+        return view('pages.success', ['msg' => '付款成功']);
     }
     
     //支付宝后端回调
