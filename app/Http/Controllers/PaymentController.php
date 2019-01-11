@@ -171,6 +171,7 @@ class PaymentController extends Controller
     }
 
     
+    //生成分期付款
     public function payByInstallment(Order $order,Request $request)
     {
         //判断订单是否属于当前用户
