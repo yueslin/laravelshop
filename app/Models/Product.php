@@ -38,13 +38,18 @@ class Product extends Model
     }
 
     
-    // 查询分类
+    // 商品分类
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
-    
-    
+
+
+    // 查询关联
+    public function properties()
+    {
+        return $this->hasMany(ProductProperty::class);
+    }
 
     //拼接图片路径
     public function getImageUrlAttribute()
@@ -55,4 +60,17 @@ class Product extends Model
         }
         return config('custom.updateFile').$this->attributes['image'];
     }
+
+    //商品属性访问器
+    public function getGroupedPropertiesAttribute()
+    {
+        return $this->properties
+            //按照属性名聚合，返回的集合的 key 是属性名，value是包含该属性名的所有属性集合
+            ->groupBy('name')
+            ->map(function ($properties){
+                // 使用 map 方法将属性集合变为属性值集合
+                return $properties->pluck('value')->all();
+            });
+    }
+
 }

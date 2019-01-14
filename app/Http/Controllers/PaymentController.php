@@ -21,17 +21,7 @@ class PaymentController extends Controller
     public function payByAlipay(Order $order,Request $request)
     {
         $this->authorize('own',$order);
-    
-        
-        //本地支付简化流程
-        $order->update([
-           'paid_at'        => Carbon::now(), // 支付时间
-           'payment_method' => 'alipay', // 支付方式
-           'payment_no'     => 'alipay:'.time(), // 支付宝订单号
-        ]);
-        $this->afterPaid($order);
-        return view('pages.success',['msg' => '付款成功']);
-    
+
     
         if ($order->paid_at||$order->closed){
             throw new InvalidRequestException('订单状态不正确');
@@ -101,6 +91,7 @@ class PaymentController extends Controller
             'total_fee'    => $order->total_amount * 100,
             'body'         => '支付 Laravel Shop 的订单：'.$order->no,
         ]);
+
         // 把要转换的字符串作为 QrCode 的构造函数参数
         $qrCode = new QrCode($wechatOrder->code_url);
 

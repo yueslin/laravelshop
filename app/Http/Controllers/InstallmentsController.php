@@ -51,13 +51,7 @@ class InstallmentsController extends Controller
             //如果没有未支付的还款，原则上不可能，因为如果分期已结清则在上一个判断就退出了
             throw new InvalidRequestException('该分期订单已结清');
         }
-    
-        //本地支付简化流程
-        $out_trade_no = $installment->no.'_'.$nextItem->sequence;
-        $this->paid($out_trade_no,'alipay','alipay:'.time());
-        return view('pages.success', ['msg' => '付款成功']);
-    
-    
+
         // 调用支付宝的网页支付
         return app('alipay')->web([
             // 支付订单号使用分期流水号+还款计划编号
@@ -65,8 +59,8 @@ class InstallmentsController extends Controller
             'total_amount' => $nextItem->total,
             'subject'      => '支付 Laravel Shop 的分期订单：'.$installment->no,
             // 这里的 notify_url 和 return_url 可以覆盖掉在 AppServiceProvider 设置的回调地址
-            'notify_url'   => route('installments.alipay.notify'),
-            'return_url'   => route('installments.alipay.return'),
+            'notify_url'   => ngrok_url('installments.alipay.notify'),
+            'return_url'   => ngrok_url('installments.alipay.return'),
          
         ]);
     }
@@ -116,7 +110,7 @@ class InstallmentsController extends Controller
             'out_trade_no' => $installment->no.'_'.$nextItem->sequence,
             'total_fee'    => $nextItem->total * 100,
             'body'         => '支付 Laravel Shop 的分期订单：'.$installment->no,
-            'notify_url'   => route('installments.wechat.notify'),
+            'notify_url'   => ngrok_url('installments.wechat.notify'),
         ]);
         // 把要转换的字符串作为 QrCode 的构造函数参数
         $qrCode = new QrCode($wechatOrder->code_url);
