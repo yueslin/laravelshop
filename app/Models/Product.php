@@ -73,7 +73,7 @@ class Product extends Model
             });
     }
 
-    // 转数据格式 方便Elasticsearch 插入数据
+    // 转数据为数组格式 方便Elasticsearch 插入数据
     public function toESArray()
     {
         // 只取出需要的字段
