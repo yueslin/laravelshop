@@ -577,3 +577,9 @@ Did you mean this?
 #22 F:\\www\\frame\\laravelshop2\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #23 {main}
 "} 
+[2019-01-17 15:53:21] local.DEBUG: Request Body [null] 
+[2019-01-17 15:53:21] local.INFO: Request Success: {"method":"GET","uri":"http://localhost:9200/","headers":{"Host":["localhost:9200"],"Content-Type":["application/json"],"Accept":["application/json"]},"HTTP code":200,"duration":0.016} 
+[2019-01-17 15:53:21] local.DEBUG: Response [{"name":"tgYWSoG","cluster_name":"elasticsearch","cluster_uuid":"uHVoQecbQyqqY6miptgkEQ","version":{"number":"6.5.4","build_flavor":"default","build_type":"zip","build_hash":"d2ef93d","build_date":"2018-12-17T21:17:40.758843Z","build_snapshot":false,"lucene_version":"7.5.0","minimum_wire_compatibility_version":"5.6.0","minimum_index_compatibility_version":"5.0.0"},"tagline":"You Know, for Search"}] 
+[2019-01-17 15:57:33] local.DEBUG: Request Body [null] 
+[2019-01-17 15:57:33] local.INFO: Request Success: {"method":"GET","uri":"http://localhost:9200/test_index/_doc/1","headers":{"Host":["localhost:9200"],"Content-Type":["application/json"],"Accept":["application/json"]},"HTTP code":200,"duration":0.016} 
+[2019-01-17 15:57:33] local.DEBUG: Response [{"_index":"test_index","_type":"_doc","_id":"1","_version":2,"found":true,"_source":{"title":"iPhone X","description":"新品到货","price":8848}}] 
